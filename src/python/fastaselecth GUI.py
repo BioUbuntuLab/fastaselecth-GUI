@@ -37,7 +37,7 @@ def run_pipeline(input_file, ids_file, output_dir, progress_bar):
 
     except subprocess.CalledProcessError as e:
         progress_bar.stop()
-        print(f"Error: {e}")
+        messagebox.showerror(f"Error: {e}")
         
 def start_thread():
     input_file = input_file_var.get()
