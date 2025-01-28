@@ -4,7 +4,9 @@ A fast lightweight x86_64 wrapper for fastaselecth
 
 ## Installation
 
-3. Download the binary using wget:
+1. install [wsl](https://github.com/BioGUIwslLab/WSL-Installation)
+2. Download `fastaselecth GUI.exe` from the `bin/gui/` folder
+3. Download the binary `fastaselecth` using wget:
 
 ```bash
 wget -O /tmp/fastaselecth https://github.com/BioGUIwslLab/fastaselecth-GUI/raw/refs/heads/main/bin/cmd/fastaselecth
@@ -21,3 +23,4 @@ chmod +x /tmp/fastaselecth
 ```bash
 sudo mv /tmp/fastaselecth /usr/bin/fastaselecth
 ```
+## Usage
