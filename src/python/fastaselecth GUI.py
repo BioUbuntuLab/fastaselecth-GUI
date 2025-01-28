@@ -32,7 +32,7 @@ def run_pipeline(input_file, ids_file, output_dir, progress_bar):
     try:
         subprocess.run(["wsl", "bash", "-c", command], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
         progress_bar.stop()
-        messagebox.showinfo("Success", f"Output files created at {os.path.abspath(output_file)}")
+        messagebox.showinfo("Success", f"Output file created at {os.path.abspath(output_file)}")
 
 
     except subprocess.CalledProcessError as e:

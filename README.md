@@ -1,6 +1,6 @@
 # fastaselecth-GUI
 
-A fast lightweight x86_64 wrapper for fastaselecth
+A fast lightweight windows x86_64 GUI wrapper for fastaselecth
 
 ## Installation
 
@@ -24,3 +24,11 @@ chmod +x /tmp/fastaselecth
 sudo mv /tmp/fastaselecth /usr/bin/fastaselecth
 ```
 ## Usage
+
+![](img/1.png)
+
+Click `browse` to select the input fasta, txt and output directory to save the output fasta file
+
+The output fasta file will the the same filename as the input txt file but with a fasta extension
+
+The data used as an example in the data folder have been derived from solgenomics.net
