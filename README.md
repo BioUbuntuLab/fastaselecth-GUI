@@ -33,6 +33,6 @@ The output fasta file will the the same filename as the input txt file but with 
 
 If Rejection of the entries of the input txt file is selected the output will contain all the entries but those within the input txt file. In that case the output file will have a `non_` prefix, the input txt filename and a `.fasta` extension.
 
-If an identifier doesn't exist in the fasta file that identifier will be ignored
+If an identifier doesn't exist in the fasta file that identifier will be ignored.
 
 The data used as an example in the data folder have been derived from solgenomics.net
