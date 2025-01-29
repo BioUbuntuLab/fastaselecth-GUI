@@ -4,7 +4,7 @@ A fast lightweight linux x86_64 GUI wrapper for fastaselecth
 
 ## Installation
 
-1. Download `fastaselecth GUI.exe` from the `bin/gui/` folder
+1. Download `fastaselecth GUI` from the `bin/gui/` folder
 2. Download the binary `fastaselecth` using wget:
 
 ```bash
