@@ -13,14 +13,10 @@ def run_pipeline(input_file, ids_file, output_dir, reject, progress_bar):
     os.chdir(output_dir)
     
     # Convert windows to wsl pathways for the ids file
-    splitted_ids_pathway = str(ids_file).split(":",1)
-    drive_ids = str(splitted_ids_pathway[0]).lower()
-    ids_file_fixed = f"/mnt/{drive_ids}{splitted_ids_pathway[1]}".replace(" ","\ ")
+    ids_file_fixed = str(ids_file).replace(" ","\ ")
 
     # Convert windows to wsl pathways for the input fasta file
-    splitted_fasta_pathway = str(input_file).split(":",1)
-    drive_fasta = str(splitted_fasta_pathway[0]).lower()
-    fasta_file_fixed = f"/mnt/{drive_fasta}{splitted_fasta_pathway[1]}".replace(" ","\ ")
+    fasta_file_fixed = str(input_file).replace(" ","\ ")
 
     # Output folder
     if not reject:
@@ -37,7 +33,7 @@ def run_pipeline(input_file, ids_file, output_dir, reject, progress_bar):
         command = f"fastaselecth -com -reject -in {fasta_file_fixed} -sel {ids_file_fixed} -out {output_file_fixed}"
 
     try:
-        subprocess.run(["wsl", "bash", "-c", command], check=True, creationflags=subprocess.CREATE_NO_WINDOW)
+        subprocess.run(["bash", "-c", command], check=True)
         progress_bar.stop()
         messagebox.showinfo("Success", f"Output file created at {os.path.abspath(output_file)}")
 
