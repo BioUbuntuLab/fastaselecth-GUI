@@ -4,7 +4,7 @@ import subprocess
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
-def run_pipeline(input_file, ids_file, output_dir, reject, progress_bar):
+def run_pipeline(input_file, ids_file, output_dir, reject, single_fasta, progress_bar):
 
     # Start the progress bar
     progress_bar.start()
@@ -18,25 +18,31 @@ def run_pipeline(input_file, ids_file, output_dir, reject, progress_bar):
     # Convert windows to wsl pathways for the input fasta file
     fasta_file_fixed = str(input_file).replace(" ","\ ")
 
-    # Output folder
-    if not reject:
-        output_file = f"{os.path.splitext(os.path.basename(ids_file))[0]}.fasta"
-    else:
-        output_file = f"non_{os.path.splitext(os.path.basename(ids_file))[0]}.fasta"
+    # Output file
+    if not single_fasta:
+        if not reject:
+            output_file = f"{os.path.splitext(os.path.basename(ids_file))[0]}.fasta"
+        else:
+            output_file = f"non_{os.path.splitext(os.path.basename(ids_file))[0]}.fasta"
 
-    output_file_fixed = str(output_file).replace(" ","\ ")
+        output_file_fixed = str(output_file).replace(" ","\ ")
     
     # Run command
-    if not reject:
-        command = f"fastaselecth -com -in {fasta_file_fixed} -sel {ids_file_fixed} -out {output_file_fixed}"
+    if not single_fasta:
+        if not reject:
+            command = f"fastaselecth -com -in {fasta_file_fixed} -sel {ids_file_fixed} -out {output_file_fixed}"
+        else:
+            command = f"fastaselecth -com -reject -in {fasta_file_fixed} -sel {ids_file_fixed} -out {output_file_fixed}"
     else:
-        command = f"fastaselecth -com -reject -in {fasta_file_fixed} -sel {ids_file_fixed} -out {output_file_fixed}"
+            command = f"paste {ids_file_fixed} {ids_file_fixed} | fastaselecth -com -fragc -in {fasta_file_fixed} -sel \"-\" -out \"%s.fasta\""
 
     try:
         subprocess.run(["bash", "-c", command], check=True)
         progress_bar.stop()
-        messagebox.showinfo("Success", f"Output file created at {os.path.abspath(output_file)}")
-
+        if not single_fasta:
+            messagebox.showinfo("Success", f"Output file created at {os.path.abspath(output_file)}")
+        else:
+            messagebox.showinfo("Success", f"Output files created at {output_dir}")
 
     except subprocess.CalledProcessError as e:
         progress_bar.stop()
@@ -47,6 +53,7 @@ def start_thread():
     ids_file = ids_file_var.get()
     output_dir = output_dir_var.get()
     reject = reject_var.get()
+    single_fasta = single_fasta_var.get()
     
     if not input_file:
         messagebox.showwarning("Input Error", "Please select an input FASTA file.")
@@ -59,10 +66,12 @@ def start_thread():
     if not  output_dir:
         messagebox.showwarning("Input Error", "Please select an output directory.")
         return
-    
+    if single_fasta and reject:
+        messagebox.showwarning("Input Error", "The reject option cannot be used with single-fasta files as output.")
+        return        
 
     # Start command in a new thread
-    thread = threading.Thread(target=run_pipeline, args=(input_file, ids_file, output_dir, reject, progress_bar))
+    thread = threading.Thread(target=run_pipeline, args=(input_file, ids_file, output_dir, reject, single_fasta, progress_bar))
     thread.start()
 
 def select_fasta_file():
@@ -102,11 +111,15 @@ tk.Button(app, text="Browse", command=select_directory).grid(row=2, column=2, pa
 reject_var = tk.BooleanVar(value=False)
 tk.Checkbutton(app, text=" Reject selected entries", variable=reject_var).grid(row=3, column=1, padx=10, pady=10, sticky="w")
 
+# Checkbox for additional option
+single_fasta_var = tk.BooleanVar(value=False)
+tk.Checkbutton(app, text="Export to single-fasta files", variable=single_fasta_var).grid(row=4, column=1, padx=10, pady=10, sticky="w")
+
 # Progress Bar (indeterminate)
 progress_bar = ttk.Progressbar(app, mode="indeterminate", length=200)
-progress_bar.grid(row=4, column=0, columnspan=3, padx=10, pady=20)
+progress_bar.grid(row=5, column=0, columnspan=3, padx=10, pady=20)
 
 # Start button
-tk.Button(app, text="Run program", command=start_thread).grid(row=5, column=1, padx=10, pady=20)
+tk.Button(app, text="Run program", command=start_thread).grid(row=6, column=1, padx=10, pady=20)
 
 app.mainloop()
